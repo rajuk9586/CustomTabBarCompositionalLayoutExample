@@ -8,9 +8,10 @@
 import UIKit
 
 class StoreHeaderCVCell: UICollectionViewCell {
-    
+    //MARK: - IBOutlets
     @IBOutlet weak var seeAllBtn: UIButton!
 
+    //MARK: - Lifecycles
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

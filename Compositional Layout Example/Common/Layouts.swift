@@ -11,6 +11,10 @@ import UIKit
 class Layouts {
     static let shared = Layouts()
     
+    private init() {
+        
+    }
+    
     func offerBannerSection()-> NSCollectionLayoutSection {
         //item
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .fractionalHeight(1))

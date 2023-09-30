@@ -8,12 +8,21 @@
 import UIKit
 
 class ReferEarnVC: UIViewController {
-
+    //MARK: - IBOutlets
+    
+    
+    //MARK: - Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .blue
     }
     
+    //MARK: - Functions
+    
+    
+    //MARK: - IBActions
 
    
 }
+
+//MARK: - Extensions

@@ -9,12 +9,21 @@ import UIKit
 
 class CategoryVC: UIViewController {
 
+    //MARK: - IBOutlets
+    
+    
+    //MARK: - Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .red
     }
     
+    //MARK: - Functions
+    
+    
+    //MARK: - IBActions
 
    
-
 }
+
+//MARK: - Extensions

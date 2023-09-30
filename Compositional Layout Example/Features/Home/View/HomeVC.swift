@@ -9,15 +9,17 @@ import UIKit
 
 class HomeVC: UIViewController {
 
+    //MARK: - IBOutlets
     @IBOutlet weak var headerVw: UIView!
     @IBOutlet weak var collectionVw: UICollectionView!
     
+    //MARK: - Variables
     var home_data: HomeBase?
     var isShowAll = false
     var timer: Timer?
     var currentPageIndex = 0
     
-    
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         self.initialSetup()
@@ -31,6 +33,7 @@ class HomeVC: UIViewController {
         self.stopTimer()
     }
     
+    //MARK: - Functions
     private func initialSetup() {
         self.headerVw.cornerRadius = 30
         self.headerVw.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
@@ -48,23 +51,30 @@ class HomeVC: UIViewController {
     
     //Start timer for automatic scroll
     private func startTimer() {
-            self.stopTimer()
-            self.timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] timer in
-                guard let self = self else { return }
-                let totalCount = self.home_data?.banner_list?.count ?? 0
-                guard totalCount > 0 else {
-                    return
-                }
-                
-                let nextPage = (self.currentPageIndex + 1) % totalCount
-                let indexPath = IndexPath(item: nextPage, section: 0)
-                
-                // Use the `scrollToItem(at:animated:)` method to enable infinite scrolling
-                self.collectionVw.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-                
-                self.currentPageIndex = nextPage
+        self.stopTimer()
+        self.timer = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] timer in
+            guard let self = self else { return }
+            let totalCount = self.home_data?.banner_list?.count ?? 0
+            guard totalCount > 0 else {
+                return
             }
+            
+            let nextPage = (self.currentPageIndex + 1) % totalCount
+            let indexPath = IndexPath(item: nextPage, section: 0)
+            
+            // Check if the banner section is visible
+            let bannerIndexPath = IndexPath(item: 0, section: 0)
+            if !self.collectionVw.indexPathsForVisibleItems.contains(bannerIndexPath) {
+                // Banner section is visible, don't scroll
+                return
+            }
+            
+            // Use the `scrollToItem(at:animated:)` method to enable infinite scrolling
+            self.collectionVw.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            
+            self.currentPageIndex = nextPage
         }
+    }
     
         private func stopTimer() {
             self.timer?.invalidate()
@@ -102,6 +112,7 @@ class HomeVC: UIViewController {
         }
     }
     
+    //MARK: - Objc Functions
     @objc func onClickSeeAll(_ sender: UIButton) {
         self.isShowAll = !self.isShowAll
         self.collectionVw.reloadSections(IndexSet(integer: 2))
@@ -109,6 +120,7 @@ class HomeVC: UIViewController {
 
 }
 
+//MARK: - Extensions
 extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         3
@@ -145,29 +157,27 @@ extension HomeVC: UICollectionViewDelegate, UICollectionViewDataSource {
         switch indexPath.section {
         case 0:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BannerCVCell", for: indexPath) as? BannerCVCell else { return UICollectionViewCell()}
-            let image = "https://cms.cashaly.com/storage/panel/banner/\(self.home_data?.banner_list?[indexPath.row].image ?? "")"
-            cell.contentView.cornerRadius = 8
-            cell.bannerImgVw.downloadImage(url: image)
+            cell.bannerData = self.home_data?.banner_list?[indexPath.row]
             return cell
         case 1:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCVCell", for: indexPath) as? CategoryCVCell else { return UICollectionViewCell()}
-            let data = self.home_data?.category_list?[indexPath.row]
-            let image = "https://cms.cashaly.com/storage/panel/cat_subcat/\(data?.category_image ?? "")"
-            cell.categoryImgVw.downloadImage(url: image)
-            cell.categoryLbl.text = data?.name ?? ""
+            cell.categoryObj = self.home_data?.category_list?[indexPath.row]
             return cell
         default:
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StoreCVCell", for: indexPath) as? StoreCVCell else { return UICollectionViewCell()}
-            let data = self.home_data?.store_list?[indexPath.row]
-            let image = "https://cms.cashaly.com/storage/panel/store/\(data?.logo ?? "")"
-            cell.categoryImgVw.downloadImage(url: image)
-                if data?.rewarde_unit == "AMOUNT" {
-                    cell.categoryLbl.text = "Rs.\(data?.max_rewards ?? 0) Cashback"
-                }else {
-                    cell.categoryLbl.text = "\(data?.max_rewards ?? 0)% Cashback"
-                }
-            
+            cell.storeObj = self.home_data?.store_list?[indexPath.row]
             return cell
+        }
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 0 {
+            let data = self.home_data?.banner_list?[indexPath.row]
+            if let url = URL(string: data?.url ?? "") {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url, options: [:], completionHandler: nil)
+                }
+            }
         }
     }
 }

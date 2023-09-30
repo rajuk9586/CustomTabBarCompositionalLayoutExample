@@ -9,20 +9,21 @@ import UIKit
 
 class AccountVC: UIViewController {
 
+    //MARK: - IBOutlets
+    
+    
+    //MARK: - Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .gray
     }
     
+    //MARK: - Functions
+    
+    
+    //MARK: - IBActions
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+   
 }
+
+//MARK: - Extensions

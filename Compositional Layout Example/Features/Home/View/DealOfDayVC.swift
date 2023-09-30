@@ -9,11 +9,21 @@ import UIKit
 
 class DealOfDayVC: UIViewController {
 
+    //MARK: - IBOutlets
+    
+    
+    //MARK: - Lifecycles
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .green
     }
     
+    //MARK: - Functions
+    
+    
+    //MARK: - IBActions
 
    
 }
+
+//MARK: - Extensions
